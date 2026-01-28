@@ -35,9 +35,10 @@ This system supports **Admin & Employee roles** with secure authentication, cust
 
 Before you begin, ensure you have the following installed:
 
-- **Node.js** (v18 or higher)
-- **PostgreSQL** (v13 or higher)
+- **Node.js** (v18+ recommended, Node 20 LTS preferred)
+- **PostgreSQL** (v14 or higher)
 - **npm** or **yarn**
+- **Prisma CLI** (v5.22.0)
 
 Verify installations:
 
@@ -45,6 +46,20 @@ Verify installations:
 node -v
 npm -v
 psql --version
+prisma -v
+```
+
+### Required Prisma Versions
+
+```
+Prisma CLI: 5.22.0
+@prisma/client: 5.22.0
+```
+
+Install Prisma CLI globally:
+
+```bash
+npm install -g prisma@5.22.0
 ```
 
 ---
