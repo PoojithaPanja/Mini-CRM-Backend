@@ -1,0 +1,1227 @@
+{
+  "info": {
+    "name": "CRM API - Complete Collection",
+    "description": "Complete Postman collection for CRM API with authentication, users, customers, and tasks management",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "variable": [
+    {
+      "key": "baseUrl",
+      "value": "http://localhost:3000",
+      "type": "string"
+    },
+    {
+      "key": "adminToken",
+      "value": "",
+      "type": "string"
+    },
+    {
+      "key": "employeeToken",
+      "value": "",
+      "type": "string"
+    },
+    {
+      "key": "adminUserId",
+      "value": "",
+      "type": "string"
+    },
+    {
+      "key": "employeeUserId",
+      "value": "",
+      "type": "string"
+    },
+    {
+      "key": "customerId",
+      "value": "",
+      "type": "string"
+    },
+    {
+      "key": "taskId",
+      "value": "",
+      "type": "string"
+    }
+  ],
+  "item": [
+    {
+      "name": "1. Authentication",
+      "item": [
+        {
+          "name": "Register Admin User",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "if (pm.response.code === 201) {",
+                  "    var jsonData = pm.response.json();",
+                  "    pm.collectionVariables.set(\"adminUserId\", jsonData.id);",
+                  "    pm.test(\"Admin user created successfully\", function () {",
+                  "        pm.expect(jsonData.role).to.eql(\"ADMIN\");",
+                  "    });",
+                  "}"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"Admin User\",\n  \"email\": \"admin@example.com\",\n  \"password\": \"admin123456\",\n  \"role\": \"ADMIN\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/auth/register",
+              "host": ["{{baseUrl}}"],
+              "path": ["auth", "register"]
+            },
+            "description": "Register a new admin user"
+          },
+          "response": []
+        },
+        {
+          "name": "Register Employee User",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "if (pm.response.code === 201) {",
+                  "    var jsonData = pm.response.json();",
+                  "    pm.collectionVariables.set(\"employeeUserId\", jsonData.id);",
+                  "    pm.test(\"Employee user created successfully\", function () {",
+                  "        pm.expect(jsonData.role).to.eql(\"EMPLOYEE\");",
+                  "    });",
+                  "}"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"Employee User\",\n  \"email\": \"employee@example.com\",\n  \"password\": \"employee123\",\n  \"role\": \"EMPLOYEE\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/auth/register",
+              "host": ["{{baseUrl}}"],
+              "path": ["auth", "register"]
+            },
+            "description": "Register a new employee user"
+          },
+          "response": []
+        },
+        {
+          "name": "Login as Admin",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "if (pm.response.code === 200) {",
+                  "    var jsonData = pm.response.json();",
+                  "    pm.collectionVariables.set(\"adminToken\", jsonData.accessToken);",
+                  "    pm.test(\"Admin login successful\", function () {",
+                  "        pm.expect(jsonData).to.have.property('accessToken');",
+                  "        pm.expect(jsonData.user.role).to.eql('ADMIN');",
+                  "    });",
+                  "}"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"email\": \"admin@example.com\",\n  \"password\": \"admin123456\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/auth/login",
+              "host": ["{{baseUrl}}"],
+              "path": ["auth", "login"]
+            },
+            "description": "Login as admin user and get JWT token"
+          },
+          "response": []
+        },
+        {
+          "name": "Login as Employee",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "if (pm.response.code === 200) {",
+                  "    var jsonData = pm.response.json();",
+                  "    pm.collectionVariables.set(\"employeeToken\", jsonData.accessToken);",
+                  "    pm.test(\"Employee login successful\", function () {",
+                  "        pm.expect(jsonData).to.have.property('accessToken');",
+                  "        pm.expect(jsonData.user.role).to.eql('EMPLOYEE');",
+                  "    });",
+                  "}"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"email\": \"employee@example.com\",\n  \"password\": \"employee123\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/auth/login",
+              "host": ["{{baseUrl}}"],
+              "path": ["auth", "login"]
+            },
+            "description": "Login as employee user and get JWT token"
+          },
+          "response": []
+        },
+        {
+          "name": "Login - Invalid Credentials",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test(\"Should return 401 for invalid credentials\", function () {",
+                  "    pm.response.to.have.status(401);",
+                  "});"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"email\": \"wrong@example.com\",\n  \"password\": \"wrongpassword\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/auth/login",
+              "host": ["{{baseUrl}}"],
+              "path": ["auth", "login"]
+            },
+            "description": "Test login with invalid credentials"
+          },
+          "response": []
+        }
+      ],
+      "description": "Authentication endpoints for user registration and login"
+    },
+    {
+      "name": "2. Users (Admin Only)",
+      "item": [
+        {
+          "name": "Get All Users (Admin)",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test(\"Status code is 200\", function () {",
+                  "    pm.response.to.have.status(200);",
+                  "});",
+                  "pm.test(\"Response is an array\", function () {",
+                  "    var jsonData = pm.response.json();",
+                  "    pm.expect(jsonData).to.be.an('array');",
+                  "});"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{adminToken}}"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/users",
+              "host": ["{{baseUrl}}"],
+              "path": ["users"]
+            },
+            "description": "Get all users - Admin only"
+          },
+          "response": []
+        },
+        {
+          "name": "Get All Users (Employee) - Should Fail",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test(\"Should return 403 for employee\", function () {",
+                  "    pm.response.to.have.status(403);",
+                  "});"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{employeeToken}}"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/users",
+              "host": ["{{baseUrl}}"],
+              "path": ["users"]
+            },
+            "description": "Test that employees cannot access user list"
+          },
+          "response": []
+        },
+        {
+          "name": "Get User by ID (Admin)",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test(\"Status code is 200\", function () {",
+                  "    pm.response.to.have.status(200);",
+                  "});",
+                  "pm.test(\"User has correct properties\", function () {",
+                  "    var jsonData = pm.response.json();",
+                  "    pm.expect(jsonData).to.have.property('id');",
+                  "    pm.expect(jsonData).to.have.property('email');",
+                  "    pm.expect(jsonData).to.not.have.property('password');",
+                  "});"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{adminToken}}"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/users/{{employeeUserId}}",
+              "host": ["{{baseUrl}}"],
+              "path": ["users", "{{employeeUserId}}"]
+            },
+            "description": "Get a specific user by ID"
+          },
+          "response": []
+        },
+        {
+          "name": "Update User Role (Admin)",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test(\"Status code is 200\", function () {",
+                  "    pm.response.to.have.status(200);",
+                  "});",
+                  "pm.test(\"Role updated successfully\", function () {",
+                  "    var jsonData = pm.response.json();",
+                  "    pm.expect(jsonData.role).to.eql('ADMIN');",
+                  "});"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "PATCH",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{adminToken}}"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"role\": \"ADMIN\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/users/{{employeeUserId}}",
+              "host": ["{{baseUrl}}"],
+              "path": ["users", "{{employeeUserId}}"]
+            },
+            "description": "Update a user's role"
+          },
+          "response": []
+        },
+        {
+          "name": "Get User - Not Found",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test(\"Should return 404\", function () {",
+                  "    pm.response.to.have.status(404);",
+                  "});"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{adminToken}}"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/users/00000000-0000-0000-0000-000000000000",
+              "host": ["{{baseUrl}}"],
+              "path": ["users", "00000000-0000-0000-0000-000000000000"]
+            },
+            "description": "Test 404 response for non-existent user"
+          },
+          "response": []
+        }
+      ],
+      "description": "User management endpoints (Admin only)"
+    },
+    {
+      "name": "3. Customers",
+      "item": [
+        {
+          "name": "Create Customer (Admin)",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "if (pm.response.code === 201) {",
+                  "    var jsonData = pm.response.json();",
+                  "    pm.collectionVariables.set(\"customerId\", jsonData.id);",
+                  "    pm.test(\"Customer created successfully\", function () {",
+                  "        pm.expect(jsonData).to.have.property('id');",
+                  "        pm.expect(jsonData.email).to.eql('customer1@example.com');",
+                  "    });",
+                  "}"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{adminToken}}"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"ABC Corporation\",\n  \"email\": \"customer1@example.com\",\n  \"phone\": \"1234567890\",\n  \"company\": \"ABC Corp\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/customers",
+              "host": ["{{baseUrl}}"],
+              "path": ["customers"]
+            },
+            "description": "Create a new customer (Admin only)"
+          },
+          "response": []
+        },
+        {
+          "name": "Create Customer - Duplicate Email",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test(\"Should return 409 for duplicate email\", function () {",
+                  "    pm.response.to.have.status(409);",
+                  "});"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{adminToken}}"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"Another Company\",\n  \"email\": \"customer1@example.com\",\n  \"phone\": \"9999999999\",\n  \"company\": \"Test\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/customers",
+              "host": ["{{baseUrl}}"],
+              "path": ["customers"]
+            },
+            "description": "Test duplicate email validation"
+          },
+          "response": []
+        },
+        {
+          "name": "Create Customer (Employee) - Should Fail",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test(\"Should return 403 for employee\", function () {",
+                  "    pm.response.to.have.status(403);",
+                  "});"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{employeeToken}}"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"Test Company\",\n  \"email\": \"test@example.com\",\n  \"phone\": \"5555555555\",\n  \"company\": \"Test\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/customers",
+              "host": ["{{baseUrl}}"],
+              "path": ["customers"]
+            },
+            "description": "Test that employees cannot create customers"
+          },
+          "response": []
+        },
+        {
+          "name": "Get All Customers (Admin) - Page 1",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test(\"Status code is 200\", function () {",
+                  "    pm.response.to.have.status(200);",
+                  "});",
+                  "pm.test(\"Response has pagination data\", function () {",
+                  "    var jsonData = pm.response.json();",
+                  "    pm.expect(jsonData).to.have.property('page');",
+                  "    pm.expect(jsonData).to.have.property('limit');",
+                  "    pm.expect(jsonData).to.have.property('totalRecords');",
+                  "    pm.expect(jsonData).to.have.property('totalPages');",
+                  "    pm.expect(jsonData).to.have.property('data');",
+                  "});"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{adminToken}}"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/customers?page=1&limit=10",
+              "host": ["{{baseUrl}}"],
+              "path": ["customers"],
+              "query": [
+                {
+                  "key": "page",
+                  "value": "1"
+                },
+                {
+                  "key": "limit",
+                  "value": "10"
+                }
+              ]
+            },
+            "description": "Get paginated customer list"
+          },
+          "response": []
+        },
+        {
+          "name": "Get All Customers (Employee)",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test(\"Status code is 200\", function () {",
+                  "    pm.response.to.have.status(200);",
+                  "});",
+                  "pm.test(\"Employee can read customers\", function () {",
+                  "    var jsonData = pm.response.json();",
+                  "    pm.expect(jsonData).to.have.property('data');",
+                  "});"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{employeeToken}}"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/customers?page=1&limit=5",
+              "host": ["{{baseUrl}}"],
+              "path": ["customers"],
+              "query": [
+                {
+                  "key": "page",
+                  "value": "1"
+                },
+                {
+                  "key": "limit",
+                  "value": "5"
+                }
+              ]
+            },
+            "description": "Employees can read customer list"
+          },
+          "response": []
+        },
+        {
+          "name": "Get Customer by ID (Admin)",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test(\"Status code is 200\", function () {",
+                  "    pm.response.to.have.status(200);",
+                  "});",
+                  "pm.test(\"Customer has correct properties\", function () {",
+                  "    var jsonData = pm.response.json();",
+                  "    pm.expect(jsonData).to.have.property('id');",
+                  "    pm.expect(jsonData).to.have.property('name');",
+                  "    pm.expect(jsonData).to.have.property('email');",
+                  "});"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{adminToken}}"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/customers/{{customerId}}",
+              "host": ["{{baseUrl}}"],
+              "path": ["customers", "{{customerId}}"]
+            },
+            "description": "Get a specific customer by ID"
+          },
+          "response": []
+        },
+        {
+          "name": "Get Customer by ID (Employee)",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test(\"Status code is 200\", function () {",
+                  "    pm.response.to.have.status(200);",
+                  "});"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{employeeToken}}"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/customers/{{customerId}}",
+              "host": ["{{baseUrl}}"],
+              "path": ["customers", "{{customerId}}"]
+            },
+            "description": "Employees can read individual customers"
+          },
+          "response": []
+        },
+        {
+          "name": "Update Customer (Admin)",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test(\"Status code is 200\", function () {",
+                  "    pm.response.to.have.status(200);",
+                  "});",
+                  "pm.test(\"Customer updated successfully\", function () {",
+                  "    var jsonData = pm.response.json();",
+                  "    pm.expect(jsonData.company).to.eql('ABC Corporation Ltd');",
+                  "});"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "PATCH",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{adminToken}}"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"company\": \"ABC Corporation Ltd\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/customers/{{customerId}}",
+              "host": ["{{baseUrl}}"],
+              "path": ["customers", "{{customerId}}"]
+            },
+            "description": "Update customer details (Admin only)"
+          },
+          "response": []
+        },
+        {
+          "name": "Update Customer (Employee) - Should Fail",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test(\"Should return 403 for employee\", function () {",
+                  "    pm.response.to.have.status(403);",
+                  "});"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "PATCH",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{employeeToken}}"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"company\": \"Test\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/customers/{{customerId}}",
+              "host": ["{{baseUrl}}"],
+              "path": ["customers", "{{customerId}}"]
+            },
+            "description": "Test that employees cannot update customers"
+          },
+          "response": []
+        },
+        {
+          "name": "Delete Customer - Not Found",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test(\"Should return 404\", function () {",
+                  "    pm.response.to.have.status(404);",
+                  "});"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "DELETE",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{adminToken}}"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/customers/00000000-0000-0000-0000-000000000000",
+              "host": ["{{baseUrl}}"],
+              "path": ["customers", "00000000-0000-0000-0000-000000000000"]
+            },
+            "description": "Test 404 for non-existent customer"
+          },
+          "response": []
+        }
+      ],
+      "description": "Customer management endpoints"
+    },
+    {
+      "name": "4. Tasks",
+      "item": [
+        {
+          "name": "Create Task (Admin)",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "if (pm.response.code === 201) {",
+                  "    var jsonData = pm.response.json();",
+                  "    pm.collectionVariables.set(\"taskId\", jsonData.id);",
+                  "    pm.test(\"Task created successfully\", function () {",
+                  "        pm.expect(jsonData).to.have.property('id');",
+                  "        pm.expect(jsonData.status).to.eql('PENDING');",
+                  "    });",
+                  "}"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{adminToken}}"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"title\": \"Follow up with customer\",\n  \"description\": \"Call customer to discuss contract renewal\",\n  \"assignedToId\": \"{{employeeUserId}}\",\n  \"customerId\": \"{{customerId}}\",\n  \"status\": \"PENDING\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/tasks",
+              "host": ["{{baseUrl}}"],
+              "path": ["tasks"]
+            },
+            "description": "Create a new task (Admin only)"
+          },
+          "response": []
+        },
+        {
+          "name": "Create Task - Invalid Customer",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test(\"Should return 404 for invalid customer\", function () {",
+                  "    pm.response.to.have.status(404);",
+                  "});"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{adminToken}}"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"title\": \"Test Task\",\n  \"assignedToId\": \"{{employeeUserId}}\",\n  \"customerId\": \"00000000-0000-0000-0000-000000000000\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/tasks",
+              "host": ["{{baseUrl}}"],
+              "path": ["tasks"]
+            },
+            "description": "Test task creation with invalid customer"
+          },
+          "response": []
+        },
+        {
+          "name": "Create Task (Employee) - Should Fail",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test(\"Should return 403 for employee\", function () {",
+                  "    pm.response.to.have.status(403);",
+                  "});"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{employeeToken}}"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"title\": \"Test Task\",\n  \"assignedToId\": \"{{employeeUserId}}\",\n  \"customerId\": \"{{customerId}}\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/tasks",
+              "host": ["{{baseUrl}}"],
+              "path": ["tasks"]
+            },
+            "description": "Test that employees cannot create tasks"
+          },
+          "response": []
+        },
+        {
+          "name": "Get All Tasks (Admin)",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test(\"Status code is 200\", function () {",
+                  "    pm.response.to.have.status(200);",
+                  "});",
+                  "pm.test(\"Response includes task details\", function () {",
+                  "    var jsonData = pm.response.json();",
+                  "    pm.expect(jsonData).to.be.an('array');",
+                  "    if (jsonData.length > 0) {",
+                  "        pm.expect(jsonData[0]).to.have.property('assignedTo');",
+                  "        pm.expect(jsonData[0]).to.have.property('customer');",
+                  "    }",
+                  "});"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{adminToken}}"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/tasks",
+              "host": ["{{baseUrl}}"],
+              "path": ["tasks"]
+            },
+            "description": "Admin can see all tasks"
+          },
+          "response": []
+        },
+        {
+          "name": "Get All Tasks (Employee)",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test(\"Status code is 200\", function () {",
+                  "    pm.response.to.have.status(200);",
+                  "});",
+                  "pm.test(\"Employee sees only their tasks\", function () {",
+                  "    var jsonData = pm.response.json();",
+                  "    var employeeId = pm.collectionVariables.get('employeeUserId');",
+                  "    jsonData.forEach(function(task) {",
+                  "        pm.expect(task.assignedToId).to.eql(employeeId);",
+                  "    });",
+                  "});"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{employeeToken}}"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/tasks",
+              "host": ["{{baseUrl}}"],
+              "path": ["tasks"]
+            },
+            "description": "Employee sees only their assigned tasks"
+          },
+          "response": []
+        },
+        {
+          "name": "Update Task Status (Employee - Own Task)",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test(\"Status code is 200\", function () {",
+                  "    pm.response.to.have.status(200);",
+                  "});",
+                  "pm.test(\"Status updated successfully\", function () {",
+                  "    var jsonData = pm.response.json();",
+                  "    pm.expect(jsonData.status).to.eql('IN_PROGRESS');",
+                  "});"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "PATCH",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{employeeToken}}"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"status\": \"IN_PROGRESS\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/tasks/{{taskId}}/status",
+              "host": ["{{baseUrl}}"],
+              "path": ["tasks", "{{taskId}}", "status"]
+            },
+            "description": "Employee updates their own task status"
+          },
+          "response": []
+        },
+        {
+          "name": "Update Task Status (Admin)",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test(\"Status code is 200\", function () {",
+                  "    pm.response.to.have.status(200);",
+                  "});",
+                  "pm.test(\"Status updated successfully\", function () {",
+                  "    var jsonData = pm.response.json();",
+                  "    pm.expect(jsonData.status).to.eql('DONE');",
+                  "});"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "PATCH",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{adminToken}}"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"status\": \"DONE\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/tasks/{{taskId}}/status",
+              "host": ["{{baseUrl}}"],
+              "path": ["tasks", "{{taskId}}", "status"]
+            },
+            "description": "Admin can update any task status"
+          },
+          "response": []
+        },
+        {
+          "name": "Update Task Status - Invalid Status",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test(\"Should return 400 for invalid status\", function () {",
+                  "    pm.response.to.have.status(400);",
+                  "});"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "PATCH",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{adminToken}}"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"status\": \"INVALID_STATUS\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/tasks/{{taskId}}/status",
+              "host": ["{{baseUrl}}"],
+              "path": ["tasks", "{{taskId}}", "status"]
+            },
+            "description": "Test invalid status value"
+          },
+          "response": []
+        }
+      ],
+      "description": "Task management endpoints"
+    },
+    {
+      "name": "5. Cleanup (Run at End)",
+      "item": [
+        {
+          "name": "Delete Customer (Admin)",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test(\"Customer deleted successfully\", function () {",
+                  "    pm.response.to.have.status(200);",
+                  "});"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "DELETE",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{adminToken}}"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/customers/{{customerId}}",
+              "host": ["{{baseUrl}}"],
+              "path": ["customers", "{{customerId}}"]
+            },
+            "description": "Delete the test customer (also deletes associated tasks due to cascade)"
+          },
+          "response": []
+        }
+      ],
+      "description": "Cleanup requests to delete test data"
+    }
+  ]
+}
