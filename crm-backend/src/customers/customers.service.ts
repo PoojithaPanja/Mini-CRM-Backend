@@ -5,12 +5,12 @@ import { UpdateCustomerDto } from './dto/update-customer.dto';
 
 @Injectable()
 export class CustomersService {
-  constructor(private prisma: PrismaService) {}
+  constructor(private readonly prisma: PrismaService) {}
 
   async create(dto: CreateCustomerDto) {
     try {
       return await this.prisma.customer.create({ data: dto });
-    } catch (e) {
+    } catch (e: any) {
       if (e.code === 'P2002') {
         throw new ConflictException('Email or phone already exists');
       }
@@ -47,7 +47,7 @@ export class CustomersService {
         where: { id },
         data: dto,
       });
-    } catch (e) {
+    } catch (e: any) {
       if (e.code === 'P2002') {
         throw new ConflictException('Email or phone already exists');
       }
