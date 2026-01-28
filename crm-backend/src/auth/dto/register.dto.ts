@@ -1,5 +1,5 @@
 import { IsEmail, IsEnum, IsNotEmpty, MinLength } from 'class-validator';
-import { Role } from '@prisma/client';
+import { Role } from '../../../generated/prisma/enums.js';
 
 export class RegisterDto {
   @IsNotEmpty()
