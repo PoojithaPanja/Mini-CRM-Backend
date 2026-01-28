@@ -20,6 +20,8 @@ model User {
   email     String   @unique
   password  String
   role      Role     @default(EMPLOYEE)
+  tasks     Task[]   @relation("AssignedTasks")
+
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 }
@@ -30,6 +32,31 @@ model Customer {
   email     String   @unique
   phone     String   @unique
   company   String?
+  tasks     Task[]
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 }
+
+enum TaskStatus {
+  PENDING
+  IN_PROGRESS
+  DONE
+}
+
+model Task {
+  id           String     @id @default(uuid())
+  title        String
+  description  String?
+  status        TaskStatus @default(PENDING)
+
+  assignedToId String
+  assignedTo   User      @relation("AssignedTasks", fields: [assignedToId], references: [id], onDelete: Cascade)
+
+  customerId   String
+  customer     Customer  @relation(fields: [customerId], references: [id], onDelete: Cascade)
+
+  createdAt    DateTime  @default(now())
+  updatedAt    DateTime  @updatedAt
+}
+
+
