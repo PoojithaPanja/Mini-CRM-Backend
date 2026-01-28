@@ -255,6 +255,5 @@ crm-backend/
 │   ├── prisma/
 │   └── common/
 ├── .env
-├── package.json
-└── README.md
+└── package.json
 ```
